@@ -14,7 +14,7 @@ connectDB();
 
 app.use(
   cors({
-    origin: "*",
+    origin: "https://missglobal-frontend.vercel.app",
   })
 );
 
