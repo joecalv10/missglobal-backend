@@ -12,9 +12,12 @@ console.log("MONGO_URI from environment:", process.env.MONGO_URI);
 
 connectDB();
 
+// CORS configuration to allow only requests from your Vercel frontend
 app.use(
   cors({
-    origin: "https://missglobal-frontend.vercel.app",
+    origin: "https://missglobal-frontend.vercel.app", // Vercel frontend URL
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allowing specific methods
+    allowedHeaders: ["Content-Type", "Authorization"], // Allow specific headers (if needed)
   })
 );
 
@@ -27,6 +30,6 @@ fs.readdirSync("./routes").map(async (route) => {
   app.use(`/api/${route.replace(".js", "")}`, router);
 });
 
-app.listen(process.env.PORT, () =>
-  console.log(`Server Running on port ${process.env.PORT}`)
+app.listen(process.env.PORT || 8080, () =>
+  console.log(`Server Running on port ${process.env.PORT || 8080}`)
 );
