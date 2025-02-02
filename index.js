@@ -1,12 +1,17 @@
-import dotenv from "dotenv";
-import express from "express";
-import connectDB from "./config/db.js";
-import fs from "fs";
-import cors from "cors";
+import dotenv from 'dotenv';
+dotenv.config();  // Only call this once
+import express from 'express';
+import connectDB from './config/db.js';
+import fs from 'fs';
+import cors from 'cors';
 
 const app = express();
-dotenv.config();
+
+// Check if MONGO_URI is correctly loaded
+console.log("MONGO_URI from environment:", process.env.MONGO_URI);
+
 connectDB();
+
 app.use(
   cors({
     origin: "*",

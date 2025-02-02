@@ -1,7 +1,7 @@
 import express from "express";
 import JudgeController from "../controllers/judge.js";
 import { isAuthorised } from "../middlewares/auth.js";
-import { isAdmin } from "../middlewares/user.js";
+import { isAdmin } from "../middlewares/users.js";
 
 export const router = express.Router();
 

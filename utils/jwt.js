@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import User from "../models/user.js";
+import User from "../models/users.js";
 
 export const createJwtToken = (email, tokenVersion, id, role) => {
   let fields = { email, tokenVersion, id, role };
