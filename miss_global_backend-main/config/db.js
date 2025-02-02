@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+import bcrypt from "bcrypt";
+import User from "../models/users.js"; // Ensure this path is correct
 
 const connectDB = async () => {
   console.log("🔍 Checking MongoDB URI:", process.env.MONGO_URI);
@@ -15,6 +17,22 @@ const connectDB = async () => {
     });
 
     console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
+
+    // 🔹 Auto-create an admin user if one doesn’t exist
+    const adminExists = await User.findOne({ role: "ADMIN" });
+    if (!adminExists) {
+      const hashedPassword = await bcrypt.hash("admin123", 10); // Hash the password
+      await User.create({
+        email: "admin@missglobal.com",
+        password: hashedPassword,
+        country: "Global",
+        role: "ADMIN",
+      });
+      console.log("✅ Default ADMIN user created (email: admin@missglobal.com, password: admin123)");
+    } else {
+      console.log("✅ Admin already exists");
+    }
+
   } catch (error) {
     console.error(`❌ MongoDB Connection Error: ${error.message}`);
     process.exit(1); // Exit process with failure
