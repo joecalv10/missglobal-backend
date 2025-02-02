@@ -11,13 +11,13 @@ const AuthController = {
       const { email, password } = req.body;
 
       if (!email || !password)
-        throw new Error("Email or Password is required!");
+        return res.status(400).json({ message: "Email and Password are required!" });
 
       const user = await User.findOne({ email });
-      if (!user) throw new Error("User Not Found!");
+      if (!user) return res.status(404).json({ message: "User Not Found!" });
 
       const pinMatch = await comparePassword(password, user.password);
-      if (!pinMatch) throw new Error("Invalid Password!");
+      if (!pinMatch) return res.status(400).json({ message: "Invalid Password!" });
 
       // Create the JWT tokens using the new JWT_SECRET
       const accesstoken = createJwtToken(
@@ -36,16 +36,17 @@ const AuthController = {
         jwtSecret // pass the JWT secret here
       );
 
-      res.status(200).json({
+      return res.status(200).json({
         message: {
           accesstoken,
           refreshtoken,
           role: user.role,
         },
+        status: true,
       });
     } catch (err) {
       console.log(err);
-      res.status(400).json({ message: err.message, status: false });
+      return res.status(500).json({ message: err.message, status: false });
     }
   },
 
@@ -53,13 +54,12 @@ const AuthController = {
     try {
       const { refresh } = req.body;
 
-      if (!refresh) return res.status(401).json({ message: "Invalid Fields" });
+      if (!refresh) return res.status(400).json({ message: "Refresh token is required!" });
       
       // Verify the refresh token using the JWT_SECRET
       const tokenDetails = await verifyToken(refresh, jwtSecret); // pass the JWT secret here
 
-      if (!tokenDetails)
-        return res.status(401).json({ message: "Unauthorised" });
+      if (!tokenDetails) return res.status(401).json({ message: "Unauthorised" });
 
       // Create a new access token after refreshing
       const accesstoken = createJwtToken(
@@ -72,24 +72,25 @@ const AuthController = {
 
       return res.status(200).json({ message: accesstoken, status: true });
     } catch (error) {
-      res.status(400).json({ status: false, message: error.message });
+      console.log(error);
+      return res.status(500).json({ status: false, message: error.message });
     }
   },
 
   logout: async (req, res) => {
     try {
-      const JWT = req.headers["authorization"].replaceAll("JWT ", "");
+      const JWT = req.headers["authorization"].replace("JWT ", "");
       const tokenDetails = await verifyToken(JWT, jwtSecret); // pass the JWT secret here
-      if (!tokenDetails)
-        return res.status(401).json({ message: "Unauthorised" });
+      if (!tokenDetails) return res.status(401).json({ message: "Unauthorised" });
 
       await User.findByIdAndUpdate(tokenDetails.id, {
         tokenVersion: tokenDetails.tokenVersion + 1,
       });
 
-      return res.json({ message: "signout success", status: true });
+      return res.json({ message: "Signout success", status: true });
     } catch (error) {
-      return res.status(400).json({ status: false });
+      console.log(error);
+      return res.status(500).json({ status: false, message: error.message });
     }
   },
 
@@ -98,22 +99,23 @@ const AuthController = {
       const { name, email, password } = req.body;
 
       if (!name || !email || !password)
-        throw new Error("Email, name, role Or Password is required!");
+        return res.status(400).json({ message: "Email, name, or password is missing!" });
 
       const user = await User.findOne({ email });
-      if (user) throw new Error("User already Exists!");
+      if (user) return res.status(400).json({ message: "User already exists!" });
 
       const hashedPassword = await hashPassword(password);
       const newUser = await User.create({
         email,
         name,
         password: hashedPassword,
+        role: "ADMIN", // Setting role as admin for the new user
       });
 
-      return res.status(200).json({ message: newUser });
+      return res.status(200).json({ message: newUser, status: true });
     } catch (err) {
       console.log(err);
-      res.status(400).json({ message: err.message });
+      return res.status(500).json({ message: err.message, status: false });
     }
   },
 };
