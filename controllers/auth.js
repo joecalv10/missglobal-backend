@@ -2,6 +2,9 @@ import User from "../models/users.js";
 import { createJwtToken, refreshJwtToken, verifyToken } from "../utils/jwt.js";
 import { comparePassword, hashPassword } from "../utils/auth.js";
 
+// Ensure JWT secret is available
+const jwtSecret = process.env.JWT_SECRET || "Misssglobal2025";
+
 const AuthController = {
   loginUser: async (req, res) => {
     try {
@@ -14,27 +17,30 @@ const AuthController = {
       if (!user) throw new Error("User Not Found!");
 
       const pinMatch = await comparePassword(password, user.password);
-      if (!pinMatch) throw new Error(`Invalid Password! `);
+      if (!pinMatch) throw new Error("Invalid Password!");
 
+      // Create the JWT tokens using the new JWT_SECRET
       const accesstoken = createJwtToken(
         email,
         user.tokenVersion,
         user._id,
-        user.role
+        user.role,
+        jwtSecret // pass the JWT secret here
       );
 
       const refreshtoken = refreshJwtToken(
         email,
         user.tokenVersion,
         user._id,
-        user.role
+        user.role,
+        jwtSecret // pass the JWT secret here
       );
 
       res.status(200).json({
         message: {
           accesstoken,
           refreshtoken,
-          role:user.role
+          role: user.role,
         },
       });
     } catch (err) {
@@ -42,37 +48,43 @@ const AuthController = {
       res.status(400).json({ message: err.message, status: false });
     }
   },
+
   refreshToken: async (req, res) => {
     try {
       const { refresh } = req.body;
 
       if (!refresh) return res.status(401).json({ message: "Invalid Fields" });
+      
+      // Verify the refresh token using the JWT_SECRET
       const tokenDetails = await verifyToken(
         refresh,
-        process.env.REFRESH_TOKEN_SECRET
+        jwtSecret // pass the JWT secret here
       );
 
       if (!tokenDetails)
         return res.status(401).json({ message: "Unauthorised" });
 
+      // Create a new access token after refreshing
       const accesstoken = createJwtToken(
         tokenDetails.email,
         tokenDetails.tokenVersion,
         tokenDetails.id,
-        tokenDetails.role
+        tokenDetails.role,
+        jwtSecret // pass the JWT secret here
       );
 
       return res.status(200).json({ message: accesstoken, status: true });
     } catch (error) {
-      res.status(400).json({ status: false, message: err.message });
+      res.status(400).json({ status: false, message: error.message });
     }
   },
+
   logout: async (req, res) => {
     try {
       const JWT = req.headers["authorization"].replaceAll("JWT ", "");
       const tokenDetails = await verifyToken(
         JWT,
-        process.env.REFRESH_TOKEN_SECRET
+        jwtSecret // pass the JWT secret here
       );
       if (!tokenDetails)
         return res.status(401).json({ message: "Unauthorised" });
@@ -86,7 +98,8 @@ const AuthController = {
       return res.status(400).json({ status: false });
     }
   },
-  addNewAdmin: async (req,res)=>{
+
+  addNewAdmin: async (req, res) => {
     try {
       const { name, email, password } = req.body;
 
@@ -108,7 +121,7 @@ const AuthController = {
       console.log(err);
       res.status(400).json({ message: err.message });
     }
-  }
+  },
 };
 
 export default AuthController;
