@@ -12,12 +12,21 @@ console.log("MONGO_URI from environment:", process.env.MONGO_URI);
 
 connectDB();
 
-// CORS configuration to allow only requests from your Vercel frontend
+// Update CORS to allow multiple URLs
+const allowedOrigins = [
+  "https://missglobal-frontend.vercel.app", // Original frontend URL
+  "https://missglobal-frontend-git-main-joe-calvins-projects.vercel.app" // New frontend URL
+];
+
 app.use(
   cors({
-    origin: "https://missglobal-frontend.vercel.app", // Vercel frontend URL
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allowing specific methods
-    allowedHeaders: ["Content-Type", "Authorization"], // Allow specific headers (if needed)
+    origin: (origin, callback) => {
+      if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
   })
 );
 

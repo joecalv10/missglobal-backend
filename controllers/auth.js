@@ -3,7 +3,7 @@ import { createJwtToken, refreshJwtToken, verifyToken } from "../utils/jwt.js";
 import { comparePassword, hashPassword } from "../utils/auth.js";
 
 // Ensure JWT secret is available
-const jwtSecret = process.env.JWT_SECRET || "Misssglobal2025";
+const jwtSecret = process.env.JWT_SECRET || "Misssglobal2025"; // Fallback to default if not set in the environment
 
 const AuthController = {
   loginUser: async (req, res) => {
@@ -11,7 +11,7 @@ const AuthController = {
       const { email, password } = req.body;
 
       if (!email || !password)
-        throw new Error("Email or Password is required !");
+        throw new Error("Email or Password is required!");
 
       const user = await User.findOne({ email });
       if (!user) throw new Error("User Not Found!");
@@ -56,10 +56,7 @@ const AuthController = {
       if (!refresh) return res.status(401).json({ message: "Invalid Fields" });
       
       // Verify the refresh token using the JWT_SECRET
-      const tokenDetails = await verifyToken(
-        refresh,
-        jwtSecret // pass the JWT secret here
-      );
+      const tokenDetails = await verifyToken(refresh, jwtSecret); // pass the JWT secret here
 
       if (!tokenDetails)
         return res.status(401).json({ message: "Unauthorised" });
@@ -82,10 +79,7 @@ const AuthController = {
   logout: async (req, res) => {
     try {
       const JWT = req.headers["authorization"].replaceAll("JWT ", "");
-      const tokenDetails = await verifyToken(
-        JWT,
-        jwtSecret // pass the JWT secret here
-      );
+      const tokenDetails = await verifyToken(JWT, jwtSecret); // pass the JWT secret here
       if (!tokenDetails)
         return res.status(401).json({ message: "Unauthorised" });
 
@@ -104,10 +98,10 @@ const AuthController = {
       const { name, email, password } = req.body;
 
       if (!name || !email || !password)
-        throw new Error("Email, name, role Or Password is required !");
+        throw new Error("Email, name, role Or Password is required!");
 
       const user = await User.findOne({ email });
-      if (user) throw new Error("User already Exists !");
+      if (user) throw new Error("User already Exists!");
 
       const hashedPassword = await hashPassword(password);
       const newUser = await User.create({
