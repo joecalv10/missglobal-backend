@@ -3,7 +3,7 @@ import { createJwtToken, refreshJwtToken, verifyToken } from "../utils/jwt.js";
 import { comparePassword, hashPassword } from "../utils/auth.js";
 
 // Ensure JWT secret is available
-const jwtSecret = process.env.JWT_SECRET || "Missglobal2025"; // Fallback to default if not set in the environment
+const jwtSecret = ${process.env.JWT_SECRET} || "Missglobal2025"; // Fallback to default if not set in the environment
 
 const AuthController = {
   loginUser: async (req, res) => {
