@@ -1,5 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config();  // Only call this once
+console.log("JWT_SECRET: ", process.env.JWT_SECRET); 
+console.log("REFRESH_TOKEN_SECRET: ", process.env.REFRESH_TOKEN_SECRET);
 import express from 'express';
 import connectDB from './config/db.js';
 import fs from 'fs';
