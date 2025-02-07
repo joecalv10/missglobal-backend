@@ -1,7 +1,7 @@
 import express from "express";
 import ActressController from "../controllers/actress.js";
 import { isAuthorised } from "../middlewares/auth.js";
-import { isAdmin } from "../middlewares/users.js";
+import { isAdmin } from "../middlewares/user.js";
 import fs from 'fs';
 import multer from "multer";
 

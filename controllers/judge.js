@@ -1,4 +1,4 @@
-import User from "../models/users.js";
+import User from "../models/user.js";
 import Rounds from "../models/rounds.js";
 import { hashPassword } from "../utils/auth.js";
 
@@ -27,8 +27,8 @@ const JudgeController = {
   },
   getAllJudges: async (_, res) => {
     try {
-      const users = await User.find({ role:"JUDGE" });
-      return res.status(200).json({ message: users });
+      const user = await User.find({ role:"JUDGE" });
+      return res.status(200).json({ message: user });
     } catch (err) {
       console.log(err);
       res.status(400).json({ message: err.message });

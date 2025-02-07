@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import User from "../models/users.js";
+import User from "../models/user.js";
 
 export const createJwtToken = (email, tokenVersion, id, role) => {
   console.log("ACCESS_TOKEN_SECRET:", process.env.ACCESS_TOKEN_SECRET);

@@ -1,4 +1,4 @@
-import User from "../models/users.js";
+import User from "../models/user.js";
 import { createJwtToken, refreshJwtToken, verifyToken } from "../utils/jwt.js";
 import { comparePassword, hashPassword } from "../utils/auth.js";
 

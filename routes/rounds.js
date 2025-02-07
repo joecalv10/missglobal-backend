@@ -1,7 +1,7 @@
 import express from "express";
 import RoundController from "../controllers/rounds.js";
 import { isAuthorised } from "../middlewares/auth.js";
-import { isAdmin } from "../middlewares/users.js";
+import { isAdmin } from "../middlewares/user.js";
 
 export const router = express.Router();
 

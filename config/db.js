@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
-import User from "../models/users.js"; // Ensure this path is correct
+import User from "../models/user.js"; // Ensure this path is correct
 
 const connectDB = async () => {
   console.log("🔍 Checking MongoDB URI:", process.env.MONGO_URI);
