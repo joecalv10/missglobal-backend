@@ -28,8 +28,8 @@ const RoundsSchema = mongoose.Schema(
     scores:[
       {
       personality: Number,
-      pose: Number,
-      attitude: Number,
+      // pose: Number,
+      // attitude: Number,
       ratedBy: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "User",

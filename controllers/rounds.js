@@ -11,7 +11,7 @@ const getSortedModels = (scores, contestents) => {
     if (!modelsScore[scr.ratedTo._id]) modelsScore[scr.ratedTo._id] = 0;
     modelsScore[scr.ratedTo._id] =
       modelsScore[scr.ratedTo._id] +
-      (scr.personality + scr.pose + scr.attitude);
+      scr.personality
   });
 
   let data = [];
