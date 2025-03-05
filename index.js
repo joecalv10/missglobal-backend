@@ -16,8 +16,8 @@ connectDB();
 
 // Update CORS to allow multiple URLs
 const allowedOrigins = [
-  "https://missglobal-frontend.vercel.app", // Original frontend URL
-  "https://missglobal-frontend-git-main-joe-calvins-projects.vercel.app" // New frontend URL
+  "https://scoring.missglobal.com/login", // Original frontend URL
+  "https://missglobal-frontend.vercel.app" // New frontend URL
 ];
 
 app.use(
