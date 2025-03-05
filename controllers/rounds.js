@@ -35,14 +35,15 @@ const getSortedModels = (scores, contestents) => {
 const RoundsController = {
   addRound: async (req, res) => {
     try {
-      const { name, qualifyContestants, isFirstRound } = req.body;
+      const { name, qualifyContestants, CriteriaPerRound, isFirstRound } = req.body;
 
-      if (!name || !qualifyContestants)
-        throw new Error("name, qualifyContestants is required !");
+      if (!name || !qualifyContestants || !CriteraPerRound)
+        throw new Error("name, qualifyContestants, Critera Per Round is required !");
 
       const rounds = await Rounds.create({
         name,
         qualifyContestants,
+        CriteriaPerRound,
         isFirstRound,
         isStart: isFirstRound,
       });

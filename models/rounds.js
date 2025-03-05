@@ -11,6 +11,7 @@ const RoundsSchema = mongoose.Schema(
   {
     name: { ...validations(String) },
     qualifyContestants: { ...validations(Number) },
+    CriterPerRound: { ...validations(String) },
     isFirstRound:Boolean,
     wildCards:[{
       type: mongoose.Schema.Types.ObjectId,
