@@ -37,8 +37,8 @@ const RoundsController = {
     try {
       const { name, qualifyContestants, CriteriaPerRound, isFirstRound } = req.body;
 
-      if (!name || !qualifyContestants || !CriteraPerRound)
-        throw new Error("name, qualifyContestants, Critera Per Round is required !");
+      if (!name || !qualifyContestants || !CriteriaPerRound)
+        throw new Error("name, qualifyContestants, Criteria Per Round is required !");
 
       const rounds = await Rounds.create({
         name,
